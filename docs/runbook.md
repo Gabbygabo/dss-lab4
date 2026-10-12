@@ -1,42 +1,59 @@
-# Runbook: DSS150P Reproducible Fire Risk Pipeline
+# Runbook: Fire Risk Reproducible Pipeline
 
-## 1. Prerequisites
-Before running the pipeline, ensure you have the following installed on your machine:
-- Python 3.10 or higher
-- Git
-- pip (Python package manager)
-
-## 2. Environment Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Gabbygabo/dss-lab4.git
-   cd DSS150P_REPRO_TOLIBA_GAB
-
-
-## Create and activate a virtual environment:
-   python -m venv venv
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-
-## Install required dependencies:
-pip install -r requirements.txt
-
-#### Download the dataset from kaggle and place the CSV file in 
-* data/source/industrial_fire_risk_data.csv
-
-## Running the pipeline
+## 1. Normal Execution
+To run the entire pipeline from scratch (recommended for a clean environment):
+```bash
 python src/cli.py --step all --force
-#### individual steps:
-* Ingestion only: python src/cli.py --step ingest
-* Transformation only: python src/cli.py --step transform
-* Training only: python src/cli.py --step train
 
-### Verifying that no data was lost or duplicated during ingestion:
-python src/verify.py
+## 2. Common Failures & Resolutions
+* Missing Source Data: If data/source/industrial_fire_risk_data.csv is missing, the pipeline will fail immediately. Download it from Kaggle (joganimitesh/industrial-fire-and-accident-risk-predictor) and place it in that folder.
+* PostgreSQL Skipped / Connection Refused: This is not a fatal error. The pipeline will still generate CSV, JSON, and Parquet benchmarks. To get PostgreSQL metrics, ensure Docker Desktop is running and execute docker compose up -d db.
+* Airflow Webserver Looping: If the Airflow container keeps restarting, it means it ran out of memory. Go to Docker Desktop -> Settings -> Resources and allocate at least 4GB of RAM.
+* ModuleNotFoundError: Run pip install -r requirements.txt to ensure all dependencies are installed.
+* FileNotFoundError (data/source): You forgot to download the Kaggle dataset. See the "Missing Source Data" section above.
 
-### Troubleshooting
-* ModuleNotFoundError: Make sure you ran pip install -r requirements.txt.
-* FileNotFoundError: data/source/industrial_fire_risk_data.csv: You forgot to download the Kaggle dataset and place it in the data/source/ folder.
-* Pipeline skips batches: You have a checkpoint file. Run with --force to reset the pipeline and process all batches from the beginning.
+## 3. Restart/rerun procedures
+To run the entire pipeline (Ingestion -> Transformation -> Storage -> Training) from scratch:
+
+bash
+python src/cli.py --step all --force
+To run individual steps:
+
+Ingestion only: python src/cli.py --step ingest
+
+Transformation only: python src/cli.py --step transform
+
+Storage Benchmark only: python src/cli.py --step storage
+
+Training only: python src/cli.py --step train
+
+## 4. Checkpoint recovery
+* The ingestion process uses a checkpoint file (metadata/checkpoint.json) to track which batches have been committed.
+* To resume from where you left off: Simply run python src/cli.py --step ingest. It will skip already committed batches.
+* To simulate a fresh start (recovery test): Run python src/cli.py --step ingest --force. This ignores the checkpoint and re-processes all batches.
+* To manually reset the checkpoint: Delete metadata/checkpoint.json and run the ingestion again.
+
+## 5. Database Reset (PostgreSQL)
+If your PostgreSQL database becomes corrupted or you want to wipe all data and start fresh:
+docker compose down -v
+docker compose up -d db
+python src/storage.py
+
+## 6. Rollback / Cleanup
+To completely reset the pipeline and remove all generated artifacts (data, models, and outputs), run:
+ On Windows PowerShell:
+Remove-Item -Recurse -Force data/raw/*, data/curated/*, outputs/*, metadata/checkpoint.json
+ On Mac/Linux:
+rm -rf data/raw/* data/curated/* outputs/* metadata/checkpoint.json
+
+After cleanup, you can re-run the full pipeline with python src/cli.py --step all --force
+
+## 7. Airflow Operations
+To start Airflow:
+docker compose -f docker-compose.airflow.yml up -d --build
+
+To view logs for the scheduler (useful for debugging DAG failures):
+docker compose -f docker-compose.airflow.yml logs -f airflow-scheduler
+
+To shut down Airflow:
+docker compose -f docker-compose.airflow.yml down
