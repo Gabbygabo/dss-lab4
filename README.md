@@ -55,45 +55,82 @@ To run the entire pipeline (Ingestion -> Transformation -> Storage -> Training) 
 python src/cli.py --step all --force
 ```
 To run individual steps:
-Ingestion only:
 ```
-python src/cli.py --step ingest
+python src/cli.py --step ingest        # raw batches
+python src/cli.py --step validate      # raw validation
+python src/cli.py --step transform     # raw → staging
+python src/cli.py --step build-curated # staging → curated
+python src/cli.py --step storage       # benchmark + Postgres load
+python src/cli.py --step train         # model + metrics
+python src/cli.py --step evaluate      # compare to baseline
+python src/cli.py --step reproducibility-check
+python src/cli.py --step publish
 ```
-Transformation only: 
+
+## Docker (no local Python required)
 ```
-python src/cli.py --step transform
-```
-Storage Benchmark only: 
-```
-python src/cli.py --step storage
-```
-Training only: 
-```
-python src/cli.py --step train
+docker compose -f docker-compose.yml run --rm pipeline
 ```
 
 ## Airflow instructions
-To start the Airflow webserver and scheduler via Docker:
-```
-docker compose -f docker-compose.airflow.yml up -d --build
-```
 
-THEN:
-1. Open your browser to http://localhost:8080.
-2. Login with: airflow / airflow.
-3. Toggle on the predictive_repro_pipeline DAG.
-4. Click "Trigger DAG" to run. You can pass {"force": true} in the config JSON to simulate a full refresh.
-5. To shut down: docker compose -f docker-compose.airflow.yml down
+The project uses two Docker Compose files:
+- `docker-compose.yml` — application PostgreSQL (`db`) and standalone pipeline runner
+- `docker-compose.airflow.yml` — Airflow webserver, scheduler, and Airflow metadata DB
+
+Both stacks must share a Docker network so the DAG can reach the application DB.
+
+### 1. Create the shared network (once)
+
+    docker network create dss150p-net
+
+### 2. Start the application database
+
+    docker compose -f docker-compose.yml up -d --build
+
+### 3. Start the Airflow stack
+
+    docker compose -f docker-compose.airflow.yml down --volumes --remove-orphans
+    docker compose -f docker-compose.airflow.yml up --build
+
+Wait for `airflow-init` to log `Migrations done` and `User "airflow" created`, then:
+
+### 4. Open the UI
+
+1. Browse to http://localhost:8080
+2. Log in with `airflow` / `airflow`
+3. Unpause the `predictive_repro_pipeline` DAG
+4. Click **Trigger DAG** → pass `{"force": true}` in the config JSON for a full refresh
+5. Monitor the **Graph View** for task states
+
+### 5. Shut down
+
+    docker compose -f docker-compose.airflow.yml down
+    docker compose -f docker-compose.yml down
 
 ## Validation
-To run the data quality assertions and integration tests:
+#### source checksum verification
 ```
-python -m pytest tests/test_pipeline.py -v
+python -c "import hashlib, yaml; m = yaml.safe_load(open('metadata/source_manifest.yml')); h = hashlib.sha256(open('data/source/industrial_fire_risk_data.csv','rb').read()).hexdigest(); print('MATCH' if h == m['sha256_checksum'] else 'MISMATCH')"
 ```
 
-To verify reproducibility against the baseline: 
+## Data-quality and code tests
+```
+python -m pytest tests/ -v
+```
+
+## Verify reproducibility against the baseline: 
 ```
 python src/evaluate.py
+```
+
+## Rerun-safety check (no duplicate logical records)
+```
+# run storage twice, count rows in between
+docker compose -f docker-compose.yml run --rm pipeline python src/cli.py --step storage --run-id check1
+docker exec -it dss150p_repro_toliba_gab-db-1 psql -U admin -d firerisk -c "SELECT COUNT(*) FROM fire_risk;"
+docker compose -f docker-compose.yml run --rm pipeline python src/cli.py --step storage --run-id check2
+docker exec -it dss150p_repro_toliba_gab-db-1 psql -U admin -d firerisk -c "SELECT COUNT(*) FROM fire_risk;"
 ```
 
 ## Expected Outputs
