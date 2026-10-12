@@ -1,10 +1,10 @@
-data/raw/
-data/staging/
-data/curated/
-data/partitioned/
-data/quarantine/
+data/
+outputs/benchmark/
 outputs/model/
+metadata/checkpoint.json
 venv/
 .env
 __pycache__/
+*.py[cod]
+*$py.class
 .ipynb_checkpoints/
