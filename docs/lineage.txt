@@ -1,0 +1,25 @@
+Due to time-constraints and that I am not feeling well, I used .txt instead.
+[Source Dataset] (industrial_fire_risk_data.csv)
+      |  (100,000 rows, 20 columns)
+      v
+[Raw Batches] (data/raw/batch_1.csv, batch_2.csv, batch_3.csv)
+      |  (Deterministic splitting, audit columns added)
+      v
+[Transformations] (src/transform.py)
+      |  - Drop 2,000 null 'Workers' rows
+      |  - Extract DateTime, Hour_of_Day, Day_of_Week, Is_Weekend, Month
+      |  - One-Hot Encode Factory, Region, Shift
+      |  - Create Interaction Terms (Temp_Pressure, Vibration_Speed)
+      v
+[Curated Dataset] (data/curated/cleaned_fire_risk_data.csv)
+      |  (98,000 rows, 26 features, 'Accident' dropped to prevent leakage)
+      v
+[Model Features] (X_train: 78,400 rows | X_test: 19,600 rows)
+      |  (Chronological 80/20 split, random_state=42)
+      v
+[Random Forest Model] (outputs/model/random_forest_model.pkl)
+      |  (n_estimators=100, max_depth=None)
+      v
+[Outputs] (metrics.json, predictions.csv)
+         - RMSE: 3.24, MAE: 2.57, R²: 0.96
+         - Predictions: Actual vs Predicted on test set

@@ -9,5 +9,5 @@
 | Model metric only visible in notebook | No machine-readable output | Persist metrics.json + comparison check | `src/train.py` saves `outputs/metrics.json` and `outputs/predictions.csv`. |
 | No source verification | Data drift/silent corruption | SHA-256 checksum in manifest | Generated checksum and stored in `metadata/source_manifest.yml`. |
 
-### note for architecture.png
+### note for architecture.png and lineage.png
 Due to time-constraints and that I am not feeling well while doing the activity, I used .txt instead.
