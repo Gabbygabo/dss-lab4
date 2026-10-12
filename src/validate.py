@@ -2,6 +2,7 @@ import pandas as pd
 import sys
 import os
 
+
 def validate_data(file_path, stage="raw"):
     print(f"Running Data Quality Checks on {stage} data: {file_path}")
     df = pd.read_csv(file_path)
@@ -14,7 +15,7 @@ def validate_data(file_path, stage="raw"):
             errors.append(f"Schema Error: Missing column {col}")
 
     # 2. Completeness (Null Check)
-    if df['Risk'].isnull().sum() > 0:
+    if 'Risk' in df.columns and df['Risk'].isnull().sum() > 0:
         errors.append("Completeness Error: Risk column has null values.")
 
     # 3. Uniqueness (Duplicate Check)
@@ -26,8 +27,8 @@ def validate_data(file_path, stage="raw"):
         if df['Risk'].min() < 0 or df['Risk'].max() > 100:
             errors.append("Validity Error: Risk values outside 0-100 range.")
 
-    # 5. Project-Specific Rule (No target leakage)
-    if 'Accident' in df.columns:
+    # 5. Project-Specific Rule (No target leakage) — only past staging.
+    if stage in ("curated", "model_ready") and 'Accident' in df.columns:
         errors.append("Leakage Error: Accident column is present in model-ready data.")
 
     if errors:
@@ -38,8 +39,13 @@ def validate_data(file_path, stage="raw"):
     else:
         print("VALIDATION PASSED: All data quality checks passed.")
 
+
 if __name__ == "__main__":
-    # Check command line argument for stage
-    stage = "raw" if "--stage" not in sys.argv else sys.argv[sys.argv.index("--stage") + 1]
-    path = "data/raw/batch_1.csv" if stage == "raw" else "data/curated/cleaned_fire_risk_data.csv"
+    args = sys.argv[1:]
+    stage = args[args.index("--stage") + 1] if "--stage" in args else "raw"
+    if "--path" in args:
+        path = args[args.index("--path") + 1]
+    else:
+        path = ("data/raw/batch_1.csv" if stage == "raw"
+                else "data/curated/cleaned_fire_risk_data.csv")
     validate_data(path, stage)

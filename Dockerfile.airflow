@@ -1,0 +1,26 @@
+FROM apache/airflow:2.9.1-python3.11
+
+USER root
+
+# Install system packages needed at build time (git for pip installs from VCS, curl for healthcheck)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git \
+        curl \
+        build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pre-create Airflow runtime dirs with correct ownership.
+# Prevents "unable to open database file" if you ever fall back to SQLite,
+# and avoids permission issues on mounted logs/plugins.
+RUN mkdir -p /opt/airflow/db /opt/airflow/logs /opt/airflow/plugins \
+    && chown -R airflow:root /opt/airflow/db /opt/airflow/logs /opt/airflow/plugins
+
+USER airflow
+
+# Install Python deps. Do NOT install apache-airflow or sqlalchemy here —
+# the base image already provides the correct versions for 2.9.1.
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+WORKDIR /opt/airflow
