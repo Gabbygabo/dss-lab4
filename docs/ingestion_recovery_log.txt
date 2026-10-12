@@ -1,0 +1,32 @@
+PS C:\Users\Lenovo Thinkpad T460\DSS150P_REPRO_TOLIBA_GAB> python src/cli.py --step ingest
+
+==================================================
+STEP 1: INGESTION
+==================================================
+Starting ingestion from data/source/industrial_fire_risk_data.csv...
+Processing batch 1...
+Batch 1 committed. Checkpoint advanced.
+Processing batch 2...
+Batch 2 committed. Checkpoint advanced.
+PS C:\Users\Lenovo Thinkpad T460\DSS150P_REPRO_TOLIBA_GAB> python src/cli.py --step ingest
+
+==================================================
+STEP 1: INGESTION
+==================================================
+Starting ingestion from data/source/industrial_fire_risk_data.csv...
+Batch 1 already committed. Skipping.
+Batch 2 already committed. Skipping.
+Processing batch 3...
+Batch 3 committed. Checkpoint advanced.
+Ingestion complete.
+PS C:\Users\Lenovo Thinkpad T460\DSS150P_REPRO_TOLIBA_GAB> python src/cli.py --step ingest --force
+==================================================
+STEP 1: INGESTION
+==================================================
+Starting ingestion from data/source/industrial_fire_risk_data.csv...
+Processing batch 1...
+Batch 1 committed. Checkpoint advanced.
+Processing batch 2...
+Processing batch 3...
+Batch 3 committed. Checkpoint advanced.
+Ingestion complete.
