@@ -35,25 +35,38 @@ Training only: python src/cli.py --step train
 
 ## 5. Database Reset (PostgreSQL)
 If your PostgreSQL database becomes corrupted or you want to wipe all data and start fresh:
+```
 docker compose down -v
 docker compose up -d db
 python src/storage.py
+```
 
 ## 6. Rollback / Cleanup
 To completely reset the pipeline and remove all generated artifacts (data, models, and outputs), run:
+
  On Windows PowerShell:
+```
 Remove-Item -Recurse -Force data/raw/*, data/curated/*, outputs/*, metadata/checkpoint.json
+```
  On Mac/Linux:
+```
 rm -rf data/raw/* data/curated/* outputs/* metadata/checkpoint.json
+```
 
 After cleanup, you can re-run the full pipeline with python src/cli.py --step all --force
 
 ## 7. Airflow Operations
 To start Airflow:
+```
 docker compose -f docker-compose.airflow.yml up -d --build
+```
 
 To view logs for the scheduler (useful for debugging DAG failures):
+```
 docker compose -f docker-compose.airflow.yml logs -f airflow-scheduler
+```
 
 To shut down Airflow:
+```
 docker compose -f docker-compose.airflow.yml down
+```
