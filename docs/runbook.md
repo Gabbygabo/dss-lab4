@@ -15,18 +15,26 @@ python src/cli.py --step all --force
 
 ## 3. Restart/rerun procedures
 To run the entire pipeline (Ingestion -> Transformation -> Storage -> Training) from scratch:
-
-bash
+```
 python src/cli.py --step all --force
+```
 To run individual steps:
-
-Ingestion only: python src/cli.py --step ingest
-
-Transformation only: python src/cli.py --step transform
-
-Storage Benchmark only: python src/cli.py --step storage
-
-Training only: python src/cli.py --step train
+* Ingestion only: 
+```
+python src/cli.py --step ingest
+```
+* Transformation only: 
+```
+python src/cli.py --step transform
+```
+* Storage Benchmark only: 
+```
+python src/cli.py --step storage
+```
+* Training only: 
+```
+python src/cli.py --step train
+```
 
 ## 4. Checkpoint recovery
 * The ingestion process uses a checkpoint file (metadata/checkpoint.json) to track which batches have been committed.
