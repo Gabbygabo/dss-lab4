@@ -1,0 +1,17 @@
+Due to time-constraints and that I am not feeling well, I used .txt instead.
+[Source Data] -> (data/source/industrial_fire_risk_data.csv)
+      |
+      v
+[Ingestion] -> (src/ingest.py) -> Outputs to: data/raw/batch_*.csv
+      |
+      v
+[Transformation] -> (src/transform.py) -> Outputs to: data/curated/cleaned_fire_risk_data.csv
+      |
+      v
+[Model Training] -> (src/train.py) -> Outputs to: outputs/model/random_forest_model.pkl
+      |
+      v
+[Evaluation] -> (src/train.py) -> Outputs to: outputs/metrics.json, outputs/predictions.csv
+      |
+      v
+[Consumer] -> Safety Teams / Maintenance Dashboard
