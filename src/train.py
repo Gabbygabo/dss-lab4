@@ -19,6 +19,20 @@ def train_model(input_path: str, output_dir: str, metrics_path: str, predictions
     X_train, X_test = X.iloc[:split_point], X.iloc[split_point:]
     y_train, y_test = y.iloc[:split_point], y.iloc[split_point:]
     
+    # --- PHASE II ADDITION: Save Split Manifest ---
+    manifest = {
+        "method": "chronological",
+        "boundary_index": split_point,
+        "train_rows": len(X_train),
+        "test_rows": len(X_test),
+        "random_seed": 42
+    }
+    os.makedirs("metadata", exist_ok=True)
+    with open("metadata/split_manifest.json", 'w') as f:
+        json.dump(manifest, f, indent=4)
+    print("Split manifest saved to metadata/split_manifest.json")
+    # ----------------------------------------------
+    
     print(f"Training Random Forest on {len(X_train)} samples...")
     # Initialize and train the model
     model = RandomForestRegressor(n_estimators=100, random_state=42)

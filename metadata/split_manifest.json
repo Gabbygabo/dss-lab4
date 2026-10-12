@@ -1,0 +1,7 @@
+{
+    "method": "chronological",
+    "boundary_index": 78400,
+    "train_rows": 78400,
+    "test_rows": 19600,
+    "random_seed": 42
+}
