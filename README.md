@@ -74,7 +74,9 @@ python src/cli.py --step train
 
 ## Airflow instructions
 To start the Airflow webserver and scheduler via Docker:
-`docker compose -f docker-compose.airflow.yml up -d --build`
+```
+docker compose -f docker-compose.airflow.yml up -d --build
+```
 
 THEN:
 1. Open your browser to http://localhost:8080.
@@ -85,10 +87,14 @@ THEN:
 
 ## Validation
 To run the data quality assertions and integration tests:
-`python -m pytest tests/test_pipeline.py -v`
+```
+python -m pytest tests/test_pipeline.py -v
+```
 
 To verify reproducibility against the baseline: 
-`python src/evaluate.py`
+```
+python src/evaluate.py
+```
 
 ## Expected Outputs
 After a successful run, the following files will be created:
