@@ -30,3 +30,22 @@ Processing batch 2...
 Processing batch 3...
 Batch 3 committed. Checkpoint advanced.
 Ingestion complete.
+
+PS C:\Users\Lenovo Thinkpad T460\DSS150P_REPRO_TOLIBA_GAB> python src/verify.py
+
+==================================================
+FINAL DUPLICATE & ROW-COUNT VERIFICATION
+==================================================
+Raw Batches (3 files combined):
+  - Total Rows: 100000
+  - Duplicate Rows: 0
+  - Expected Rows: 100,000
+
+Curated Dataset (data/curated/cleaned_fire_risk_data.csv):
+  - Total Rows: 98000
+  - Duplicate Rows: 0
+  - Expected Rows: 98,000 (after dropping 2,000 missing 'Workers')
+
+==================================================
+VERIFICATION PASSED: No duplicates and row counts are correct.
+==================================================
