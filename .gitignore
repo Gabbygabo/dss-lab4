@@ -1,10 +1,51 @@
-data/
-outputs/benchmark/
-outputs/model/
-metadata/checkpoint.json
-venv/
+# ============================================================
+# DSS150P Reproducible Pipeline — .gitignore
+# ============================================================
+# Rule of thumb:
+#   COMMIT: source code, config templates, Dockerfiles, SQL,
+#           small evidence files (metrics.json, split_manifest.json,
+#           reproducibility_report.json), docs.
+#   IGNORE: secrets, generated data, runtime state, logs, binaries.
+# ============================================================
+
+# --- Secrets ---
 .env
+.env.*
+!.env.example
+
+# --- Python ---
+venv/
+.venv/
+env/
 __pycache__/
 *.py[cod]
 *$py.class
+*.egg-info/
+.pytest_cache/
 .ipynb_checkpoints/
+
+# --- Data layers (all regenerable from source) ---
+data/
+!data/.gitkeep
+!data/source/.gitkeep
+!data/source/README.md
+
+# --- Generated outputs (large or binary) ---
+outputs/benchmark/
+outputs/model/
+outputs/published/
+outputs/predictions.csv
+
+# --- Runtime state (regenerated each run) ---
+metadata/checkpoint.json
+
+# --- Airflow / Docker runtime ---
+logs/
+plugins/
+airflow-logs/
+*.log
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+desktop.ini
