@@ -1,0 +1,18 @@
+{
+  "baseline_model_family": "Random Forest Regressor",
+  "target_variable": "Risk",
+  "feature_set": "26 features (after one-hot encoding and interaction terms)",
+  "train_test_strategy": "Chronological 80/20 split",
+  "random_seed": 42,
+  "preprocessing": "Drop missing Workers, Temporal extraction, Categorical encoding, Interaction terms",
+  "hyperparameters": {
+    "n_estimators": 100,
+    "random_state": 42
+  },
+  "reported_metrics": {
+    "MSE": 10.47,
+    "RMSE": 3.24,
+    "MAE": 2.57,
+    "R2": 0.96
+  }
+}

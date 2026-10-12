@@ -1,0 +1,27 @@
+contract_version: "1.0"
+dataset_identifier: "industrial_fire_risk_data"
+version_checksum: "REPLACE_WITH_HASH"
+required_columns:
+  - Date: {type: string, nullable: false}
+  - Time: {type: string, nullable: false}
+  - Factory: {type: string, nullable: false}
+  - Region: {type: string, nullable: false}
+  - Shift: {type: string, nullable: false}
+  - Workers: {type: float, nullable: true, min: 0}
+  - Temp: {type: float, nullable: false}
+  - Pressure: {type: float, nullable: false}
+  - Humidity: {type: float, nullable: false}
+  - Vibration: {type: float, nullable: false}
+  - Speed: {type: float, nullable: false}
+  - Age: {type: int, nullable: false}
+  - Service_Days: {type: int, nullable: false}
+  - Gas: {type: float, nullable: false}
+  - Sparks: {type: int, nullable: false}
+  - Alarm: {type: string, nullable: false}
+  - Risk: {type: float, nullable: false, min: 0, max: 100}
+  - Accident: {type: int, nullable: false, allowed_values: [0, 1]}
+uniqueness_rules:
+  - "No duplicate rows allowed"
+  - "Business key: DateTime + Factory"
+target_variable: "Risk"
+contract_violation_behavior: "quarantine" # Options: fail, quarantine, warn

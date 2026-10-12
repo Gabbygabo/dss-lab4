@@ -1,0 +1,10 @@
+dataset_id: industrial_fire_risk_data
+version: 1.0
+source_location: data/source/industrial_fire_risk_data.csv
+file_size_bytes: "11311983 bytes"
+row_count: 100000
+column_count: 20
+sha256_checksum: "6457d041b0215399f867ee0855aa136f859ff541714ebb8fed56cb4a43b44536"
+ownership: "Kaggle - joganimitesh/industrial-fire-and-accident-risk-predictor"
+license: "Unknown/Public"
+update_frequency: "Static"
