@@ -31,17 +31,19 @@ The pipeline follows a strict data flow:
    cd DSS150P_REPRO_TOLIBA_GAB
 
 ## Create and activate virtual environment:
+```
 python -m venv venv
 # Windows:
 venv\Scripts\activate
 # Mac/Linux:
 source venv/bin/activate
+```
 
 ## Install dependencies
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 ## Create own environment file:
-cp .env.example .env
+`cp .env.example .env`
 
 ## Data Placement / Acquisition
 1. Download the dataset from kaggle: https://www.kaggle.com/datasets/joganimitesh/industrial-fire-and-accident-risk-predictor
@@ -49,17 +51,19 @@ cp .env.example .env
 
 ## Execution commands:
 To run the entire pipeline (Ingestion -> Transformation -> Storage -> Training) from scratch:
-python src/cli.py --step all --force
+`python src/cli.py --step all --force`
 
 To run individual steps:
+```
 Ingestion only: python src/cli.py --step ingest
 Transformation only: python src/cli.py --step transform
 Storage Benchmark only: python src/cli.py --step storage
 Training only: python src/cli.py --step train
+```
 
 ## Airflow instructions
 To start the Airflow webserver and scheduler via Docker:
-docker compose -f docker-compose.airflow.yml up -d --build
+`docker compose -f docker-compose.airflow.yml up -d --build`
 
 THEN:
 1. Open your browser to http://localhost:8080.
@@ -70,10 +74,10 @@ THEN:
 
 ## Validation
 To run the data quality assertions and integration tests:
-python -m pytest tests/test_pipeline.py -v
+`python -m pytest tests/test_pipeline.py -v`
 
 To verify reproducibility against the baseline: 
-python src/evaluate.py
+`python src/evaluate.py`
 
 ## Expected Outputs
 After a successful run, the following files will be created:
