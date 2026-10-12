@@ -51,14 +51,25 @@ source venv/bin/activate
 
 ## Execution commands:
 To run the entire pipeline (Ingestion -> Transformation -> Storage -> Training) from scratch:
-`python src/cli.py --step all --force`
-
-To run individual steps:
 ```
-Ingestion only: python src/cli.py --step ingest
-Transformation only: python src/cli.py --step transform
-Storage Benchmark only: python src/cli.py --step storage
-Training only: python src/cli.py --step train
+python src/cli.py --step all --force
+```
+To run individual steps:
+Ingestion only:
+```
+python src/cli.py --step ingest
+```
+Transformation only: 
+```
+python src/cli.py --step transform
+```
+Storage Benchmark only: 
+```
+python src/cli.py --step storage
+```
+Training only: 
+```
+python src/cli.py --step train
 ```
 
 ## Airflow instructions
