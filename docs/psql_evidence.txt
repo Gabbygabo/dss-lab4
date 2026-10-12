@@ -1,0 +1,5 @@
+PS C:\Users\Lenovo Thinkpad T460\DSS150P_REPRO_TOLIBA_GAB> docker exec -it dss150p_repro_toliba_gab-db-1 psql -U admin -d firerisk -c "SELE
+ count 
+-------
+ 98000
+(1 row)
