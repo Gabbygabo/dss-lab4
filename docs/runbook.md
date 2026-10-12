@@ -2,8 +2,9 @@
 
 ## 1. Normal Execution
 To run the entire pipeline from scratch (recommended for a clean environment):
-```bash
+```
 python src/cli.py --step all --force
+```
 
 ## 2. Common Failures & Resolutions
 * Missing Source Data: If data/source/industrial_fire_risk_data.csv is missing, the pipeline will fail immediately. Download it from Kaggle (joganimitesh/industrial-fire-and-accident-risk-predictor) and place it in that folder.
