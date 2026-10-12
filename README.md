@@ -11,12 +11,3 @@
 
 ### note for architecture.png and lineage.png
 Due to time-constraints and that I am not feeling well while doing the activity, I used .txt instead.
-
-## Lineage: 
-graph TD
-    A[Source Dataset<br/>100k rows, 20 cols] --> B[Raw Batches<br/>100k rows, 23 cols]
-    B --> C[Transformations<br/>Drop nulls, One-Hot Encode, Interactions]
-    C --> D[Curated Dataset<br/>98k rows, 26 cols]
-    D --> E[Model Features<br/>Train: 78.4k / Test: 19.6k]
-    E --> F[Random Forest Model]
-    F --> G[Outputs<br/>metrics.json, predictions.csv]
