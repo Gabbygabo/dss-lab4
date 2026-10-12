@@ -1,0 +1,10 @@
+data/raw/
+data/staging/
+data/curated/
+data/partitioned/
+data/quarantine/
+outputs/model/
+venv/
+.env
+__pycache__/
+.ipynb_checkpoints/
